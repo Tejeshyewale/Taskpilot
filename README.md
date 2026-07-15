@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TaskPilot — Autonomous Research Agent
 
 A production-oriented autonomous research agent with a premium web UI,
@@ -151,3 +152,7 @@ a guess.
 - Add a third tool (code execution, file I/O)
 - Move history/auth from JSON files to Postgres for true concurrent multi-user scale
 - Add password reset / email verification for accounts
+=======
+# Taskpilot
+Autonomous Research Agent
+>>>>>>> 697c301ff8cdd395ae8af07296c6a1100e919cc1
