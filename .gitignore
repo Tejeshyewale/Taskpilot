@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.env
+data/*.sqlite
+data/*.sqlite-*
+data/users.json
+data/sessions.json
+data/history.json
+data/reports/
+data/eval_report.md
+data/final_report.md
+logs/*.jsonl
+.venv/
+venv/

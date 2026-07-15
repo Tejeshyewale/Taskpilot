@@ -1,0 +1,17 @@
+langgraph==1.2.9
+langgraph-checkpoint==4.1.1
+langgraph-checkpoint-sqlite==3.1.0
+langchain-core==1.4.9
+fastapi==0.139.0
+uvicorn[standard]==0.51.0
+websockets==15.0.1
+pydantic==2.13.4
+requests==2.33.1
+python-dotenv==1.2.2
+ddgs==9.14.4
+python-docx==1.2.0
+reportlab==4.4.10
+
+# Optional — only needed if you switch providers (see app/llm.py)
+# google-generativeai   # for Gemini
+# anthropic             # for Claude

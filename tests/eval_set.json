@@ -1,0 +1,17 @@
+[
+  {"goal": "Research the EV battery market in India", "max_iterations": 6},
+  {"goal": "Research the growth of UPI payments in India", "max_iterations": 6},
+  {"goal": "Research the Indian semiconductor manufacturing push", "max_iterations": 6},
+  {"goal": "Research renewable energy adoption trends in India", "max_iterations": 6},
+  {"goal": "Research the Indian edtech market post-2023", "max_iterations": 6},
+  {"goal": "Research quantum computing research output in India", "max_iterations": 6},
+  {"goal": "Research the Indian agritech startup ecosystem", "max_iterations": 6},
+  {"goal": "Research 5G rollout progress in India", "max_iterations": 6},
+  {"goal": "Research the Indian space startup sector", "max_iterations": 6},
+  {"goal": "Research cybersecurity hiring trends in India", "max_iterations": 6},
+  {"goal": "Research the used-car marketplace industry in India", "max_iterations": 6},
+  {"goal": "Research green hydrogen initiatives in India", "max_iterations": 2, "note": "adversarial: low iteration cap, should hit safety valve"},
+  {"goal": "Research India's data center investment boom", "max_iterations": 2, "note": "adversarial: low iteration cap, should hit safety valve"},
+  {"goal": "Research the Indian drone manufacturing industry", "max_iterations": 3, "note": "adversarial: low iteration cap"},
+  {"goal": "Research generative AI adoption in Indian enterprises", "max_iterations": 6}
+]
