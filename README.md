@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # TaskPilot — Autonomous Research Agent
 
 A production-oriented autonomous research agent with a premium web UI,
@@ -155,4 +155,4 @@ a guess.
 =======
 # Taskpilot
 Autonomous Research Agent
->>>>>>> 697c301ff8cdd395ae8af07296c6a1100e919cc1
+
