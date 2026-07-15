@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskPilot — Autonomous Research Agent</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- ============ AUTH GATE ============ -->
+<div class="auth-gate" id="authGate">
+  <div class="auth-card">
+    <div class="brand brand-center">
+      <svg class="brand-logo" width="44" height="44" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="11" fill="url(#logoGradAuth)"/>
+        <path d="M20 7L29 27L20 22L11 27L20 7Z" fill="#fff" fill-opacity="0.96"/>
+        <circle cx="20" cy="20.5" r="2.1" fill="#fff"/>
+        <defs>
+          <linearGradient id="logoGradAuth" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#7c6ef2"/><stop offset="55%" stop-color="#b06ef2"/><stop offset="100%" stop-color="#f26e9e"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-text">
+        <div class="brand-title">TaskPilot</div>
+        <div class="brand-sub">Autonomous Research Agent</div>
+      </div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin">Log In</button>
+      <button class="auth-tab" id="tabSignup">Sign Up</button>
+    </div>
+
+    <form id="loginForm" class="auth-form">
+      <input type="email" id="loginEmail" placeholder="Email" required autocomplete="email">
+      <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Log In</button>
+    </form>
+
+    <form id="signupForm" class="auth-form hidden">
+      <input type="text" id="signupName" placeholder="Name (optional)" autocomplete="name">
+      <input type="email" id="signupEmail" placeholder="Email" required autocomplete="email">
+      <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" required autocomplete="new-password">
+      <button type="submit" class="btn btn-primary btn-block btn-lg">Create Account</button>
+    </form>
+
+    <div class="auth-error hidden" id="authError"></div>
+
+    <button class="auth-skip" id="skipAuthBtn">Continue without an account →</button>
+  </div>
+</div>
+
+<div class="app-shell hidden" id="appShell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="11" fill="url(#logoGrad)"/>
+        <path d="M20 7L29 27L20 22L11 27L20 7Z" fill="#fff" fill-opacity="0.96"/>
+        <circle cx="20" cy="20.5" r="2.1" fill="#fff"/>
+        <defs>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#7c6ef2"/><stop offset="55%" stop-color="#b06ef2"/><stop offset="100%" stop-color="#f26e9e"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-text">
+        <div class="brand-title">TaskPilot</div>
+        <div class="brand-sub">Autonomous Research Agent</div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block" id="newTaskBtn">
+      <span class="icon">+</span> New Research Task
+    </button>
+
+    <button class="btn btn-ghost btn-block" id="quickSearchToggle">
+      <span class="icon">⌕</span> Quick Web Search
+    </button>
+
+    <button class="btn btn-ghost btn-block" id="compareToggle">
+      <span class="icon">⇄</span> Battle Mode (Compare)
+    </button>
+
+    <div class="sidebar-section-label">Recent Reports</div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">No reports yet — run your first task.</div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark theme">
+        <span id="themeIcon">☾</span>
+      </button>
+
+      <div class="user-chip" id="userChip">
+        <span id="userChipName">Guest</span>
+        <button class="icon-btn-sm" id="logoutBtn" title="Log out">⎋</button>
+      </div>
+
+      <div class="sidebar-footer">
+        <span class="status-dot" id="apiStatusDot"></span>
+        <span id="apiStatusText">Checking backend…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ QUICK SEARCH PANEL (slide-over) ============ -->
+  <div class="overlay" id="quickSearchOverlay">
+    <div class="quick-search-panel">
+      <div class="panel-header">
+        <h3>Quick Web Search</h3>
+        <button class="icon-btn" id="closeQuickSearch">✕</button>
+      </div>
+      <p class="panel-sub">A fast, one-off search — no planning, no report, just a direct answer with a source.</p>
+      <div class="search-input-row">
+        <input type="text" id="quickSearchInput" placeholder="e.g. current repo rate in India" />
+        <button class="btn btn-primary" id="quickSearchBtn">Search</button>
+      </div>
+      <div class="quick-search-result" id="quickSearchResult"></div>
+    </div>
+  </div>
+
+  <!-- ============ COMPARE / BATTLE MODE PANEL (slide-over) ============ -->
+  <div class="overlay" id="compareOverlay">
+    <div class="quick-search-panel">
+      <div class="panel-header">
+        <h3>Battle Mode — Compare Two Topics</h3>
+        <button class="icon-btn" id="closeCompare">✕</button>
+      </div>
+      <p class="panel-sub">A fast side-by-side snapshot — searches both topics and summarizes the key differences.</p>
+      <div class="compare-input-row">
+        <input type="text" id="compareInputA" placeholder="e.g. Zepto" />
+        <span class="vs-label">vs</span>
+        <input type="text" id="compareInputB" placeholder="e.g. Blinkit" />
+      </div>
+      <button class="btn btn-primary btn-block" id="compareBtn">⇄ Compare</button>
+      <div class="quick-search-result" id="compareResult"></div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main">
+
+    <!-- ---- Stage: idle / goal input ---- -->
+    <section class="stage" id="stageIdle">
+      <div class="hero">
+        <h1>What should I research today?</h1>
+        <p>I'll plan it into sub-questions, research each with the right tool, critique my own findings, and check in with you before writing the final report.</p>
+      </div>
+
+      <div class="card goal-card">
+        <textarea id="goalInput" placeholder="e.g. Research the growth of UPI payments in India, including major players and recent regulatory changes" rows="3"></textarea>
+
+        <div class="goal-options-row">
+          <div class="option-field">
+            <label for="languageSelect">Report language</label>
+            <select id="languageSelect">
+              <option>English</option>
+              <option>Hindi</option>
+              <option>Spanish</option>
+              <option>French</option>
+              <option>German</option>
+              <option>Japanese</option>
+            </select>
+          </div>
+          <div class="option-field">
+            <label for="notifyEmailInput">Email me when ready (optional)</label>
+            <input type="email" id="notifyEmailInput" placeholder="you@example.com">
+          </div>
+        </div>
+
+        <div class="goal-card-footer">
+          <div class="slider-group">
+            <label for="maxIter">Safety cap: research/critique loops</label>
+            <input type="range" id="maxIter" min="2" max="12" value="6">
+            <span id="maxIterValue">6</span>
+          </div>
+          <button class="btn btn-primary btn-lg" id="startBtn">
+            Start Research <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="suggestion-row">
+        <span class="suggestion-label">Try:</span>
+        <button class="chip">EV battery market in India</button>
+        <button class="chip">UPI payments growth</button>
+        <button class="chip">Indian semiconductor policy</button>
+      </div>
+    </section>
+
+    <!-- ---- Stage: running (progress) ---- -->
+    <section class="stage hidden" id="stageRunning">
+      <div class="progress-header">
+        <h2 id="runningGoalText">Researching…</h2>
+        <p class="progress-sub">Live status — this reflects exactly what the agent is doing right now.</p>
+      </div>
+
+      <div class="stepper">
+        <div class="step" data-step="planner">
+          <div class="step-dot"></div>
+          <div class="step-label">Planning</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="research">
+          <div class="step-dot"></div>
+          <div class="step-label">Researching</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="critique">
+          <div class="step-dot"></div>
+          <div class="step-label">Self-Critique</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="human_review">
+          <div class="step-dot"></div>
+          <div class="step-label">Your Review</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="compose">
+          <div class="step-dot"></div>
+          <div class="step-label">Writing Report</div>
+        </div>
+      </div>
+
+      <div class="live-trace" id="liveTrace"></div>
+    </section>
+
+    <!-- ---- Stage: human review ---- -->
+    <section class="stage hidden" id="stageReview">
+      <div class="card review-card">
+        <div class="badge badge-success">✓ Research phase complete</div>
+        <h2>Review the draft outline</h2>
+        <p class="muted">Take a look before I write the full report. Approve as-is, or leave feedback for me to incorporate.</p>
+
+        <div class="outline-box" id="outlineBox"></div>
+
+        <textarea id="feedbackInput" placeholder="Optional feedback — e.g. 'add more on regulation' or leave blank to approve as-is" rows="2"></textarea>
+
+        <div class="review-actions">
+          <button class="btn btn-primary btn-lg" id="approveBtn">✓ Approve &amp; Generate Report</button>
+          <button class="btn btn-ghost" id="rejectBtn">Reject</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- Stage: complete ---- -->
+    <section class="stage hidden" id="stageComplete">
+      <div class="report-header">
+        <div class="badge badge-success">✓ Task Complete</div>
+        <h2 id="completeGoalText"></h2>
+
+        <div class="export-actions">
+          <button class="btn btn-outline" id="exportPdfBtn">⬇ PDF</button>
+          <button class="btn btn-outline" id="exportDocxBtn">⬇ Word (.docx)</button>
+          <button class="btn btn-ghost" id="viewTraceBtn">◈ View Trace</button>
+          <button class="btn btn-ghost" id="newTaskBtn2">+ New Task</button>
+        </div>
+      </div>
+
+      <div class="card report-card">
+        <div id="reportContent" class="report-content"></div>
+
+        <div class="sources-box" id="sourcesBox"></div>
+
+        <div class="feedback-row">
+          <span class="feedback-label">Was this report useful?</span>
+          <button class="feedback-btn" id="feedbackUpBtn" title="Useful">👍</button>
+          <button class="feedback-btn" id="feedbackDownBtn" title="Not useful">👎</button>
+          <span class="feedback-thanks hidden" id="feedbackThanks">Thanks for the feedback!</span>
+        </div>
+      </div>
+
+      <div class="trace-panel hidden" id="tracePanel">
+        <h3>Execution Trace</h3>
+        <div class="trace-log" id="traceLog"></div>
+      </div>
+    </section>
+
+    <!-- ---- Error banner ---- -->
+    <div class="error-banner hidden" id="errorBanner">
+      <span id="errorText"></span>
+      <button id="dismissError">✕</button>
+    </div>
+
+  </main>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
