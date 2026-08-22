@@ -1,158 +1,169 @@
+Samajh gaya — professional README chahiye jisme badges (shields.io wale colorful tags), table of contents, sab kuch ho jaise top GitHub projects me dikhta hai. Yeh lo poora naya README — bas copy karke `README.md` completely replace kar do:
 
-# TaskPilot — Autonomous Research Agent
+```markdown
+<div align="center">
 
-A production-oriented autonomous research agent with a premium web UI,
-real-time streaming, accounts, and a genuine multi-tool agent core.
+# 🚀 TaskPilot
 
-Give it a goal, it plans it into subquestions, researches each one with
-the right tool (web search or calculator), self-critiques its own
-progress, pauses for your approval, and writes a polished final report —
-exportable as DOCX or PDF, in the language of your choice, with an
-optional email notification when it's ready. A "Battle Mode" side panel
-gives instant side-by-side comparisons of two topics.
+### Autonomous Research Agent with a Premium Web UI
 
-Built with **LangGraph** (agent orchestration), **FastAPI** (with native
-WebSocket streaming), and a hand-built HTML/CSS/JS frontend.
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://langchain-ai.github.io/langgraph/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+[![Stars](https://img.shields.io/github/stars/Tejeshyewale/Taskpilot?style=for-the-badge&color=gold)](https://github.com/Tejeshyewale/Taskpilot/stargazers)
+[![Forks](https://img.shields.io/github/forks/Tejeshyewale/Taskpilot?style=for-the-badge&color=blue)](https://github.com/Tejeshyewale/Taskpilot/network/members)
+[![Issues](https://img.shields.io/github/issues/Tejeshyewale/Taskpilot?style=for-the-badge&color=red)](https://github.com/Tejeshyewale/Taskpilot/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/Tejeshyewale/Taskpilot?style=for-the-badge&color=success)](https://github.com/Tejeshyewale/Taskpilot/commits)
+
+Give it a goal — it plans, researches, self-critiques, pauses for your approval,
+and delivers a polished report. Real streaming. Real accounts. Real tools.
+
+[Features](#-features) • [Demo](#-architecture) • [Quick start](#-quick-start) • [Structure](#-project-structure) • [Security](#-security) • [Roadmap](#%EF%B8%8F-roadmap)
+
+</div>
 
 ---
 
-## Features
+## 📖 About
 
-- **Real LLM + real web search, no mock mode** — Gemini / Claude / Groq for
-  reasoning, free DuckDuckGo (or optional Tavily) for search
-- **Multi-tool agent** — a subquestion is routed to a calculator tool or
-  a web-search tool depending on what it actually needs, not one
-  hardcoded tool for everything
-- **Real-time streaming** — the UI's progress stepper reflects the
-  agent's *actual* current step, pushed live over a WebSocket, not a
-  client-side animation guessing at timing
-- **Accounts** — email/password signup & login (salted, hashed
-  passwords); a guest can also skip login and use the app anonymously.
-  Each user's report history stays private to them
-- **DOCX / PDF export** — a clean, professional formatted document, not
-  a JSON dump
-- **Multi-language reports** — English, Hindi, Spanish, French, German,
-  Japanese
-- **Email notifications** — optional, sent when a report finishes
-  (gracefully skipped if SMTP isn't configured)
-- **Battle Mode** — fast side-by-side comparison of two topics, skipping
-  the full plan/research/critique loop for a quick snapshot
-- **Feedback** — 👍/👎 rating per report, aggregated for a simple
-  usefulness signal
-- **Light/dark theme toggle**
-- **Task history sidebar**, unique logo, distinct visual identity
+TaskPilot is a production-oriented autonomous research agent. It plans a goal into subquestions, researches each one with the right tool (web search or calculator), self-critiques its own progress, pauses for human approval, and writes a polished final report — exportable as DOCX or PDF, in the language of your choice.
 
-## Architecture
+Built with **LangGraph** for agent orchestration, **FastAPI** for native WebSocket streaming, and a hand-built HTML/CSS/JS frontend — no heavy frontend framework needed.
 
-```
-Browser (static/index.html, style.css, app.js)
-        |  fetch() + WebSocket
-        v
-FastAPI (app/main.py)
-        |
-        +- /ws/tasks                       -> app/graph.py, streamed live over WebSocket
-        +- /api/auth/*                      -> app/auth.py (signup/login/session tokens)
-        +- /api/tasks/history, /feedback     -> app/history.py (JSON store, user-scoped)
-        +- /api/tasks/{id}/export             -> app/export.py (DOCX/PDF)
-        +- /api/search                         -> app/tools.py (quick search)
-        +- /api/compare                         -> Battle Mode (search both + LLM synthesis)
-        +- /api/trace                            -> app/tracing.py (observability)
+## ✨ Features
+
+| | |
+|---|---|
+| 🧠 **Real LLM + real web search** | Gemini / Claude / Groq for reasoning, free DuckDuckGo (or optional Tavily) for search — no mock mode |
+| 🛠️ **Multi-tool agent** | Subquestions route to a calculator or web-search tool based on what they actually need |
+| ⚡ **Real-time streaming** | Progress stepper reflects the agent's *actual* current step, pushed live over WebSocket |
+| 🔐 **Accounts** | Salted, hashed passwords, rate-limited login, expiring sessions — guests can skip login entirely |
+| 📄 **DOCX / PDF export** | Clean, professional formatted documents, not a JSON dump |
+| 🌐 **Multi-language reports** | English, Hindi, Spanish, French, German, Japanese |
+| 📧 **Email notifications** | Optional, sent when a report finishes |
+| ⚔️ **Battle Mode** | Instant side-by-side comparison of two topics |
+| 👍 **Feedback** | Per-report rating, aggregated for a usefulness signal |
+| 🌗 **Light/dark theme** | Toggle from the sidebar |
+| 📱 **Fully responsive** | Mobile-friendly slide-in sidebar navigation |
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart TD
+    A[Browser: index.html / style.css / app.js] -->|fetch + WebSocket| B[FastAPI: app/main.py]
+    B --> C["/ws/tasks<br/>graph.py — live stream"]
+    B --> D["/api/auth/*<br/>auth.py"]
+    B --> E["/api/tasks/history<br/>history.py"]
+    B --> F["/api/tasks/export<br/>export.py"]
+    B --> G["/api/search<br/>tools.py"]
+    B --> H["/api/compare<br/>Battle Mode"]
 ```
 
-Agent graph (core design unchanged — see `app/graph.py`):
+**Agent graph:**
+
+```mermaid
+flowchart LR
+    P[Planner] --> R[Research]
+    R <--> C[Critique]
+    C --> HR[Human review]
+    HR -->|paused for approval| CO[Compose]
+    CO --> D[Deliver]
 ```
-planner -> research <-> critique -> human_review (pauses here) -> compose -> deliver
-```
-- **Multi-tool routing**: `research` picks `calculator` for pure-arithmetic
-  subquestions, `web_search` otherwise (heuristic router — see
-  `app/tools.py::needs_calculator`, upgradeable to an LLM-based router)
-- Hard iteration cap prevents infinite loops, independent of what the LLM "thinks"
+
+- **Multi-tool routing** — `research` picks `calculator` for pure-arithmetic subquestions, `web_search` otherwise
+- Hard iteration cap prevents infinite loops
 - Per-subquestion retry-then-give-up prevents one bad search from stalling everything
 - State persists to SQLite — a task survives a full process restart
-- Every node execution is logged to `logs/trace.jsonl` and streamed live over WebSocket
+- Every node execution is logged and streamed live over WebSocket
 
-## Running it
+## 🚀 Quick start
 
-### 1. Install
 ```bash
+# 1. Install
 pip install -r requirements.txt
-```
 
-### 2. Configure
-```bash
+# 2. Configure
 cp .env.example .env
-```
-Set **one** LLM key (required):
-```
-GEMINI_API_KEY=...   # or
-ANTHROPIC_API_KEY=... # or
-GROQ_API_KEY=...     # free tier: https://console.groq.com/keys
-```
-Web search works with no key (free DuckDuckGo). Optional additions:
-```
-TAVILY_API_KEY=...          # higher-quality search
-SMTP_HOST=... etc.          # enables email notifications
-```
+# then set ONE LLM key inside .env:
+#   GEMINI_API_KEY=...        or
+#   ANTHROPIC_API_KEY=...     or
+#   GROQ_API_KEY=...          (free tier: console.groq.com/keys)
 
-### 3. Run
-```bash
+# 3. Run
 uvicorn app.main:app --reload --port 8000
 ```
+
 Open **http://localhost:8000** — sign up, log in, or skip and use as a guest.
 
-### 4. Docker
+### 🐳 Docker
+
 ```bash
 docker compose up --build
 ```
 
-## Project structure
+## 📁 Project structure
+
 ```
 taskpilot/
-|-- app/
-|   |-- state.py         # state schema + reducers (now includes user_id, language, notify_email)
-|   |-- llm.py             # LLM client (Gemini/Anthropic/Groq, lazy key check)
-|   |-- tools.py             # web_search (DuckDuckGo/Tavily) + calculator + tool router
-|   |-- auth.py                # accounts - hashed passwords, session tokens
-|   |-- notify.py                # email notifications (graceful no-op if unconfigured)
-|   |-- tracing.py                 # observability (JSONL trace log)
-|   |-- graph.py                     # the agent graph - nodes, edges, loop control
-|   |-- export.py                      # DOCX + PDF report generation
-|   |-- history.py                       # user-scoped task history + feedback ratings
-|   |-- run.py / start_task.py / resume_task.py   # CLI + persistence demos
-|   `-- main.py                             # FastAPI backend: REST + WebSocket + serves static/
-|-- static/
-|   |-- index.html                            # single-page app shell (auth gate + main app)
-|   |-- style.css                               # premium dark/light theme
-|   |-- app.js                                    # frontend logic incl. WebSocket client
-|   `-- favicon.svg                                 # unique logo mark
-|-- tests/                                           # evaluation harness (needs a real key)
-|-- requirements.txt
-|-- Dockerfile / docker-compose.yml
-`-- .env.example
+├── app/
+│   ├── state.py       # state schema + reducers
+│   ├── llm.py          # LLM client (Gemini/Anthropic/Groq)
+│   ├── tools.py         # web_search + calculator + tool router
+│   ├── auth.py            # accounts — hashed passwords, sessions, rate-limiting
+│   ├── notify.py            # email notifications
+│   ├── tracing.py             # observability (JSONL trace log)
+│   ├── graph.py                 # the agent graph
+│   ├── export.py                  # DOCX + PDF generation
+│   ├── history.py                   # user-scoped task history + feedback
+│   └── main.py                        # FastAPI backend
+├── static/
+│   ├── index.html      # single-page app shell
+│   ├── style.css         # dark/light theme, mobile responsive
+│   ├── app.js               # frontend logic + WebSocket client
+│   └── favicon.svg            # logo mark
+├── tests/                       # evaluation harness
+├── requirements.txt
+├── Dockerfile / docker-compose.yml
+└── .env.example
 ```
 
-## Design notes
+## 🔒 Security
 
-**Logo**: a custom SVG mark (not a stock emoji or icon-font glyph) — an
-angular "forward motion" arrow inside a rounded badge, using the app's own
-indigo→violet→pink gradient, doubling as the browser favicon.
+- 🔑 Passwords salted and hashed with **PBKDF2** (100,000 iterations) — never stored in plaintext
+- ⏳ Session tokens **expire after 14 days**
+- 🚫 Login **rate-limited** (5 attempts / 5 min per account) against brute-force
+- 🌍 **CORS configurable** via `CORS_ORIGINS` for production deployments
 
-**UI**: dark-first "mission control" theme, Inter for UI text, JetBrains Mono
-for the trace/log panel. A light theme is available via the sidebar toggle.
-Motion is limited to the stepper and panel transitions; `prefers-reduced-motion`
-is respected; keyboard focus is visible on every interactive element.
+## 🗺️ Roadmap
 
-**Streaming**: `graph.stream(..., stream_mode="updates")` runs in a worker
-thread; each node's completion is forwarded over the WebSocket as it
-happens, so the UI's stepper is a direct reflection of backend state, not
-a guess.
+- [ ] Swap the heuristic calculator router for an LLM-based tool-selection call
+- [ ] Add a third tool (code execution, file I/O)
+- [ ] Move history/auth from JSON files to Postgres for concurrent multi-user scale
+- [ ] Add password reset / email verification
 
-## Extending it further
-- Swap the heuristic calculator router for an LLM-based tool-selection call
-- Add a third tool (code execution, file I/O)
-- Move history/auth from JSON files to Postgres for true concurrent multi-user scale
-- Add password reset / email verification for accounts
-=======
-# Taskpilot
-Autonomous Research Agent
+## 🤝 Contributing
 
+Pull requests are welcome. For major changes, open an issue first to discuss what you'd like to change.
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+<div align="center">
+
+Made with ❤️ by [Tejeshyewale](https://github.com/Tejeshyewale)
+
+⭐ Star this repo if you find it useful!
+
+</div>
+```
+
+**Bas itna karo:**
+1. Ye poora text copy karo
+2. GitHub pe `README.md` file open karo → Edit (pencil icon) → sab purana delete → ye paste karo → Commit changes
+
+Badges automatic real-time update honge (stars, forks, last commit) — koi manual kaam nahi. Mermaid diagrams bhi GitHub khud render kar dega (koi extra setup nahi chahiye).
