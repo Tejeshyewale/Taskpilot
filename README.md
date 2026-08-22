@@ -1,6 +1,3 @@
-Samajh gaya — professional README chahiye jisme badges (shields.io wale colorful tags), table of contents, sab kuch ho jaise top GitHub projects me dikhta hai. Yeh lo poora naya README — bas copy karke `README.md` completely replace kar do:
-
-```markdown
 <div align="center">
 
 # 🚀 TaskPilot
@@ -155,15 +152,8 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for details.
 
 <div align="center">
 
-Made with ❤️ by [Tejeshyewale](https://github.com/Tejeshyewale)
+Made with  by [Tejeshyewale](https://github.com/Tejeshyewale)
 
 ⭐ Star this repo if you find it useful!
 
-</div>
-```
 
-**Bas itna karo:**
-1. Ye poora text copy karo
-2. GitHub pe `README.md` file open karo → Edit (pencil icon) → sab purana delete → ye paste karo → Commit changes
-
-Badges automatic real-time update honge (stars, forks, last commit) — koi manual kaam nahi. Mermaid diagrams bhi GitHub khud render kar dega (koi extra setup nahi chahiye).
